@@ -1,0 +1,62 @@
+# dependencies
+frontend/node_modules/
+.pnp
+.pnp.js
+
+# testing
+frontend/coverage/
+frontend/cypress/videos/
+frontend/cypress/screenshots/
+
+# production
+build
+frontend/dist/
+frontend/dist-ssr/
+
+# misc
+.DS_Store
+.env
+.env.local
+frontend/.env.development
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
+
+# Frontend logs dir
+frontend/logs
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env/
+.venv/
+
+# Model files
+backend/models/*
+!backend/models/.gitkeep
+
+# Typescript Build Info
+frontend/*.tsbuildinfo
