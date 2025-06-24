@@ -8,7 +8,6 @@ from modules.ner_analyzer_reddit import NERRedditModel
 
 import os
 from dotenv import load_dotenv
-from modules.reddit_fetcher import reddit_processing_queue
 
 env_path = os.path.join(os.path.dirname(__file__), 'modules', '.env')
 load_dotenv(dotenv_path=env_path)
@@ -24,10 +23,9 @@ topicModel = RedditTopicModeler()
 ner_model = NERRedditModel()
 
 
-def process_reddit_queue():
-    while not reddit_processing_queue.empty():
-        post = reddit_processing_queue.get()
-        print(f"Processing Reddit post: {post['title']}")
+def process_reddit_queue(posts_to_process):
+    for post in posts_to_process:
+        print(f"Processing: {post['title']}")
 
         full_text = f"{post['title']} {post['selftext']}".strip()
 
@@ -61,4 +59,4 @@ def process_reddit_queue():
                 upsert=True                    # Insert if not found
             )
 
-    print("Reddit queue processed and stored in MongoDB.")
+    print("Reddit posts processed and stored in MongoDB.")

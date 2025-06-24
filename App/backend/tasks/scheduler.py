@@ -1,16 +1,17 @@
-import schedule
-import time
-from modules.reddit_fetcher import fetch_hot_posts, AVAILABLE_SUBREDDITS
-from reddit_worker import process_reddit_queue
+from modules.reddit_fetcher import fetch_hot_posts_praw, AVAILABLE_SUBREDDITS
+from .reddit_worker import process_reddit_queue
 from modules.news_fetcher import fetch_news_to_queue
-from news_worker import process_news_queue
+from .news_worker import process_news_queue
 
 def fetch_latest():
     print("Fetching and processing Reddit posts...")
+    all_new_posts = []
     for sub in AVAILABLE_SUBREDDITS:
         print("Subreddit: ", sub)
-        fetch_hot_posts(subreddit=sub, posts=5)
-    process_reddit_queue()
+        posts = fetch_hot_posts_praw(subreddit=sub, posts=5)
+        if posts:
+            all_new_posts.extend(posts)
+    process_reddit_queue(all_new_posts)
     print("Fetched and processed Reddit posts.\n")
     print()
     print("Fetching and processing 20 news articles...")
@@ -18,14 +19,5 @@ def fetch_latest():
     process_news_queue()
     print("News done yay wait another hour")
 
-# Schedule the job every 30 minutes
-schedule.every(1).hours.do(fetch_latest)
-
-# Run immediately on start (optional)
-fetch_latest()
-print("Fetch scheduler started. Running every 1 hour...\n")
-
-# Keep running the scheduler
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+if __name__ == "__main__":
+    fetch_latest()
