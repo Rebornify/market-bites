@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv() # Load environment variables from .env file
+
 from modules.reddit_fetcher import fetch_hot_posts_praw, AVAILABLE_SUBREDDITS
 from .reddit_worker import process_reddit_queue
 from modules.news_fetcher import fetch_news_to_queue
