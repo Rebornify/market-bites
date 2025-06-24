@@ -55,8 +55,8 @@ venv/
 .venv/
 
 # Model files
-backend/models/*
-!backend/models/.gitkeep
+# backend/models/*
+# !backend/models/.gitkeep
 
 # Typescript Build Info
 frontend/*.tsbuildinfo

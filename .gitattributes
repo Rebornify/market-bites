@@ -1,0 +1,5 @@
+App/backend/models/finbert_sentiment/* filter=lfs diff=lfs merge=lfs -text
+App/backend/models/ner_news/* filter=lfs diff=lfs merge=lfs -text
+App/backend/models/ner_reddit/* filter=lfs diff=lfs merge=lfs -text
+App/backend/models/nmf_news/* filter=lfs diff=lfs merge=lfs -text
+App/backend/models/nmf_reddit/* filter=lfs diff=lfs merge=lfs -text
