@@ -104,12 +104,12 @@ def initial_clean(text):
 class TextSummarizer:
     def __init__(self):
         """Initialize the text summarization component. """ 
-        self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
-        self.model =  BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
+        # self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
+        # self.model =  BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
 
         # If model keeps crashing, use these
-        # self.tokenizer = BartTokenizer.from_pretrained("sshleifer/distilbart-cnn-12-6")
-        # self.model = BartForConditionalGeneration.from_pretrained("sshleifer/distilbart-cnn-12-6")
+        self.tokenizer = BartTokenizer.from_pretrained("sshleifer/distilbart-cnn-12-6")
+        self.model = BartForConditionalGeneration.from_pretrained("sshleifer/distilbart-cnn-12-6")
 
     
     def readability_adjusted_top_k(self, text, min_k=3, max_k=6):
