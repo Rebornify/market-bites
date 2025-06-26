@@ -9,6 +9,12 @@ import textstat
 import contractions
 import html 
 import emoji
+import nltk
+
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
 
 def remove_emojis(text):
     return emoji.replace_emoji(text, replace='')

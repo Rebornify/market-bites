@@ -2,12 +2,33 @@ import os
 import re
 import html
 import contractions
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 from gensim.corpora.dictionary import Dictionary
 from gensim.models import Nmf, TfidfModel
+
+try:
+    stopwords.words('english')
+except LookupError:
+    nltk.download('stopwords')
+
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('taggers/averaged_perceptron_tagger')
+except LookupError:
+    nltk.download('averaged_perceptron_tagger')
+
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('wordnet')
 
 class RedditTopicModeler:
     def __init__(self, model_dir=None):
