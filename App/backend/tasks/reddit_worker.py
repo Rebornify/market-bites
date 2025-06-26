@@ -25,6 +25,11 @@ ner_model = NERRedditModel()
 
 def process_reddit_queue(posts_to_process):
     for post in posts_to_process:
+        # Check if the post has already been processed
+        if reddit_collection.find_one({"post_id": post["post_id"]}):
+            print(f"Skipping already processed post: {post['title']}")
+            continue
+
         print(f"Processing: {post['title']}")
 
         full_text = f"{post['title']} {post['selftext']}".strip()

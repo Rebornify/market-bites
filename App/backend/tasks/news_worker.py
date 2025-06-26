@@ -24,6 +24,12 @@ summarizer = TextSummarizer()
 def process_news_queue():
     while not processing_queue.empty():
         article = processing_queue.get()
+
+        # Check if the article has already been processed using its link as post_id
+        if news_collection.find_one({"post_id": article["link"]}):
+            print(f"Skipping already processed article: {article['title']}")
+            continue
+
         print(f"Processing: {article['title']}")
 
         full_text = f"{article['title']} {article['content']}".strip()
