@@ -56,12 +56,11 @@ def process_reddit_queue(posts_to_process):
             "num_comments": post["num_comments"]
         }
 
-        # Avoid duplicate results + don't add empty summaries
-        if result_doc["summary"] != "":
-            reddit_collection.update_one(
-                {"post_id": post["post_id"]},  # Match by post_id
-                {"$set": result_doc},          # Update with new content
-                upsert=True                    # Insert if not found
-            )
+        # Upsert the document, ensuring it's stored even if the summary is empty.
+        reddit_collection.update_one(
+            {"post_id": post["post_id"]},  # Match by post_id
+            {"$set": result_doc},          # Update with new content
+            upsert=True                    # Insert if not found
+        )
 
     print("Reddit posts processed and stored in MongoDB.")

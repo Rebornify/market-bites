@@ -78,6 +78,21 @@ def remove_markdown(text):
 
     return text.strip() # Return stripped text to remove leading/trailing whitespace
 
+def _get_fallback_summary(content, title):
+    """Provides a fallback summary using content's first sentence or the title."""
+    print("Initiating fallback sequence.")
+    if content and content.strip():
+        sentences = sent_tokenize(content)
+        if sentences:
+            print("Falling back to first sentence of content.")
+            # Return the first sentence, ensuring it's not longer than a typical summary.
+            return (sentences[0][:150] + '...') if len(sentences[0]) > 150 else sentences[0]
+    if title:
+        print("Falling back to title.")
+        return title
+    print("All fallbacks failed, returning empty summary.")
+    return ""
+
 def safe_expand_contractions(text):
     words = text.split()
     expanded_words = []
@@ -148,21 +163,27 @@ class TextSummarizer:
         top_sentences = [sentences[i] for i in ranked_indices[:top_k]]
         return ' '.join(top_sentences)
         
-    def summarize(self, text, max_length=100):
+    def summarize(self, text, title=None, max_length=100):
         """Generate a summary of the given text.
         
         Args:
             text (str): The text to summarize
+            title (str, optional): Title of the text, used as a fallback summary.
             max_length (int, optional): Maximum length of the summary in words
             
         Returns:
-            dict: Contains the generated summary and metadata
-                  {"summary": "...", "confidence": 0.95}
+            str: The generated summary. Can be an empty string if all generation and fallbacks fail.
         """
+        if not text or not text.strip():
+            print("Content is empty, falling back to title for summary.")
+            return title if title else ""
+        
         try:
             # Extract top informative sentences first
             print("Processing for summary...")
             processed = initial_clean(text)
+            if not processed.strip():
+                return _get_fallback_summary(text, title)
 
             top_k = self.readability_adjusted_top_k(processed)
 
@@ -197,12 +218,10 @@ class TextSummarizer:
 
             # Fallback: use first sentence of original input if summary is empty
             if not cleaned_summary.strip():
-                print("Summary was empty after artifact removal. Falling back to first sentence.")
-                fallback_summary = sent_tokenize(text)[0] if sent_tokenize(text) else ''
-                return fallback_summary
+                return _get_fallback_summary(text, title)
 
             return cleaned_summary
             
         except Exception as e:
             print(f"Error during text summarization: {str(e)}")
-            raise 
+            return _get_fallback_summary(text, title) 
