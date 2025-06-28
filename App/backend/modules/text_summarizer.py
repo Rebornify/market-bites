@@ -85,8 +85,14 @@ def _get_fallback_summary(content, title):
         sentences = sent_tokenize(content)
         if sentences:
             print("Falling back to first sentence of content.")
-            # Return the first sentence, ensuring it's not longer than a typical summary.
-            return (sentences[0][:150] + '...') if len(sentences[0]) > 150 else sentences[0]
+            first_sentence = sentences[0]
+            if len(first_sentence) > 150:
+                # Truncate at the last word boundary before 150 chars
+                trunc_point = first_sentence[:150].rfind(' ')
+                if trunc_point == -1:  # No space found, hard truncate
+                    trunc_point = 150
+                return first_sentence[:trunc_point] + '...'
+            return first_sentence
     if title:
         print("Falling back to title.")
         return title
@@ -213,7 +219,11 @@ class TextSummarizer:
             decoded = self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
 
             # to cut the summary off at the last complete sentence
-            clean_summary = decoded[:decoded.rfind('.') + 1] if '.' in decoded else decoded
+            last_punc_index = max(decoded.rfind('.'), decoded.rfind('!'), decoded.rfind('?'))
+            if last_punc_index != -1:
+                clean_summary = decoded[:last_punc_index + 1]
+            else:
+                clean_summary = decoded
             cleaned_summary = remove_common_bart_artifacts(clean_summary)
 
             # Fallback: use first sentence of original input if summary is empty
