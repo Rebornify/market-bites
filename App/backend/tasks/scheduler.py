@@ -17,8 +17,8 @@ def fetch_latest():
     process_reddit_queue(all_new_posts)
     print("Fetched and processed Reddit posts.\n")
     print()
-    print("Fetching and processing 20 news articles...")
-    fetch_news_to_queue("", pageSize=75)
+    print("Fetching and processing up to 50 news articles...")
+    fetch_news_to_queue("finance OR stocks OR market OR earnings", pageSize=50)
     process_news_queue()
     print("News done yay wait another hour")
 

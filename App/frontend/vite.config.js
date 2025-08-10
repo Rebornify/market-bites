@@ -18,13 +18,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://app.finlight.me',
+        target: 'http://localhost:5000',  // Flask backend
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        secure: false,
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        }
+        secure: false
       }
     }
   }
