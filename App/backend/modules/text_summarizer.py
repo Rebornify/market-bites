@@ -142,7 +142,13 @@ class TextSummarizer:
     def readability_adjusted_top_k(self, text, min_k=3, max_k=6):
         sentences = sent_tokenize(text)
         sentence_count = len(sentences)
-        readability_score = textstat.flesch_reading_ease(text)
+        
+        try:
+            readability_score = textstat.flesch_reading_ease(text)
+        except (KeyError, ValueError, Exception) as e:
+            # Fallback if textstat fails (e.g., word not in CMU dictionary like stock tickers, numbers)
+            # This is normal for financial content with tickers like AMZN, GOOGL, etc.
+            readability_score = 50  # Default to medium complexity
 
         # More complex = more sentences included
         if readability_score >= 60:
@@ -233,5 +239,5 @@ class TextSummarizer:
             return cleaned_summary
             
         except Exception as e:
-            print(f"Error during text summarization: {str(e)}")
+            print(f"Text summarization failed, using fallback summary. Error: {type(e).__name__}")
             return _get_fallback_summary(text, title) 
